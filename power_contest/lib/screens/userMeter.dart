@@ -1,24 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:power_contest/screens/userMeter.dart';
-import 'signupPage.dart';
+
 import 'package:google_fonts/google_fonts.dart';
-import 'package:power_contest/screens/signupPage.dart';
+import 'package:power_contest/screens/leaderboard.dart';
 
-
-class LoginPage extends StatefulWidget {
-  LoginPage({Key key, this.title}) : super(key: key);
-
-  final String title;
+class UserMeter extends StatefulWidget {
+  final String email;
+  UserMeter({Key key, this.email}) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _UserMeterState createState() => _UserMeterState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  String email, password;
+class _UserMeterState extends State<UserMeter> {
+  String name;
+  int meterID;
+
   //text controller
-  final TextEditingController emailController = new TextEditingController();
-  final TextEditingController passController = new TextEditingController();
+  final TextEditingController controller = new TextEditingController();
+
+Widget _email() {
+  if(widget.email != null && widget.email.length != 0) {
+    return RichText(
+      textAlign: TextAlign.center,
+      text: TextSpan(
+          text: 'Email: ',
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+          children: [
+            TextSpan(
+              text: widget.email,
+              style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.normal),
+            ),
+          ]),
+    );
+  } else {
+    return SizedBox();
+  }
+}
 
   Widget _backButton() {
     return InkWell(
@@ -31,55 +52,21 @@ class _LoginPageState extends State<LoginPage> {
           children: <Widget>[
             Container(
               padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
-              child: Icon(Icons.keyboard_arrow_left, color: Colors.white, size: 35,),
+              child: Icon(Icons.keyboard_arrow_left, color: Colors.white, size: 35),
             ),
             Text('Back',
-                style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w500))
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white))
           ],
         ),
       ),
     );
   }
 
-  Widget _createAccountLabel() {
+  Widget _entryField(String title, {bool isCode = false}) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 20),
-      alignment: Alignment.bottomCenter,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            'Don\'t have an account ?',
-            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          InkWell(
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => SignupPage()));
-            },
-            child: Text(
-              'Register',
-              style: TextStyle(
-                  color: Color.fromRGBO(0, 187, 255, 1),
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-
-  Widget _entryField(String title, {bool isPassword = false}) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      margin: isCode == true ? EdgeInsets.symmetric(vertical: 10, horizontal: 90): EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: isCode == true ? CrossAxisAlignment.center: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
             title,
@@ -89,15 +76,14 @@ class _LoginPageState extends State<LoginPage> {
             height: 10,
           ),
           TextField(
-            controller: isPassword == true ? passController:emailController,
+            controller: controller,
             onChanged: (dynamic string) {
-              if(isPassword) {
-                password = string;
+              if(isCode) {
+                meterID = string;
               } else {
-                email = string;
+                name = string;
               }
             },
-              obscureText: isPassword,
               decoration: InputDecoration(
                   border: InputBorder.none,
                   fillColor: Color.fromRGBO(0, 126, 222, 0.1),
@@ -110,12 +96,11 @@ class _LoginPageState extends State<LoginPage> {
   Widget _submitButton() {
     return InkWell(
       onTap: () {
-        print(email);
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => UserMeter(email: email,)));
+            context, MaterialPageRoute(builder: (context) => Leaderboard()));
       },
           child: Container(
-        width: MediaQuery.of(context).size.width/2,
+        width: MediaQuery.of(context).size.width/3,
         padding: EdgeInsets.symmetric(vertical: 15),
         alignment: Alignment.center,
         decoration: BoxDecoration(
@@ -127,12 +112,10 @@ class _LoginPageState extends State<LoginPage> {
                   blurRadius: 5,
                   spreadRadius: 2)
             ],
-            gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [Color.fromRGBO(0, 187, 255, 1), Color.fromRGBO(0, 126, 222, 1)])),
+            color: Color.fromRGBO(0, 187, 255, 1),
+            ),
         child: Text(
-          'Login',
+          'Continue',
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
       ),
@@ -158,11 +141,11 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _emailPasswordWidget() {
+  Widget _tempinfo() {
     return Column(
       children: <Widget>[
-        _entryField("Email Address"),
-        _entryField("Password", isPassword: true),
+        _entryField("Username"),
+        _entryField("Meter ID", isCode: true),
       ],
     );
   }
@@ -179,26 +162,19 @@ class _LoginPageState extends State<LoginPage> {
                 padding: EdgeInsets.only(left: 35, right: 35, bottom: 20),
                 
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     SizedBox(height: 100,),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Column(children: <Widget>[
-                          _title(),
-                          SizedBox(height: 25,),
-                          Text(
-                            "Sign In",
-                            style: TextStyle(
-                              letterSpacing: 2,
-                              color: Colors.white,
-                              fontSize: 40,
-                              fontWeight: FontWeight.w700),
-                          ),
-                        ],)
-                      
+                      _title()
                     ]),
+                    SizedBox(height: 25,),
+                    Text(
+                      "Provide a temporary User Name and Meter ID.",
+                      style: TextStyle(color: Colors.white),),
+                    SizedBox(height: 15),
                   ],
                 ),
               ),
@@ -217,28 +193,29 @@ class _LoginPageState extends State<LoginPage> {
                 children: <Widget>[
                   Container(
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         _top(),
                         SizedBox(
-                          height: 50,
+                          height: 40,
                         ),
-                        _emailPasswordWidget(),
+                        _email(),
+                        _tempinfo(),
                         SizedBox(
                           height: 20,
                         ),
                         _submitButton(),
-                        
-                       
                       ],
                     ),
                   ),
+                  
                   Positioned(top: 40, left: 0, child: _backButton()),
-                 Align(alignment: Alignment.bottomCenter, child: _createAccountLabel(),)
+                 
                 ],
               ),
             ),
       )
         
-      );
+    );
   }
 }

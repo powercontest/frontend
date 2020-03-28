@@ -5,21 +5,16 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:power_contest/screens/signupPage.dart';
 
 
-class LoginPage extends StatefulWidget {
-  LoginPage({Key key, this.title}) : super(key: key);
+class SignupPage extends StatefulWidget {
+  SignupPage({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _SignupPageState createState() => _SignupPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  String email, password;
-  //text controller
-  final TextEditingController emailController = new TextEditingController();
-  final TextEditingController passController = new TextEditingController();
-
+class _SignupPageState extends State<SignupPage> {
   Widget _backButton() {
     return InkWell(
       onTap: () {
@@ -41,40 +36,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _createAccountLabel() {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 20),
-      alignment: Alignment.bottomCenter,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            'Don\'t have an account ?',
-            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          InkWell(
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => SignupPage()));
-            },
-            child: Text(
-              'Register',
-              style: TextStyle(
-                  color: Color.fromRGBO(0, 187, 255, 1),
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-
   Widget _entryField(String title, {bool isPassword = false}) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -89,14 +50,6 @@ class _LoginPageState extends State<LoginPage> {
             height: 10,
           ),
           TextField(
-            controller: isPassword == true ? passController:emailController,
-            onChanged: (dynamic string) {
-              if(isPassword) {
-                password = string;
-              } else {
-                email = string;
-              }
-            },
               obscureText: isPassword,
               decoration: InputDecoration(
                   border: InputBorder.none,
@@ -110,9 +63,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget _submitButton() {
     return InkWell(
       onTap: () {
-        print(email);
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => UserMeter(email: email,)));
+            context, MaterialPageRoute(builder: (context) => UserMeter()));
       },
           child: Container(
         width: MediaQuery.of(context).size.width/2,
@@ -189,7 +141,7 @@ class _LoginPageState extends State<LoginPage> {
                           _title(),
                           SizedBox(height: 25,),
                           Text(
-                            "Sign In",
+                            "Sign Up",
                             style: TextStyle(
                               letterSpacing: 2,
                               color: Colors.white,
@@ -199,6 +151,8 @@ class _LoginPageState extends State<LoginPage> {
                         ],)
                       
                     ]),
+                    
+                    SizedBox(height: 15),
                   ],
                 ),
               ),
@@ -233,7 +187,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   Positioned(top: 40, left: 0, child: _backButton()),
-                 Align(alignment: Alignment.bottomCenter, child: _createAccountLabel(),)
+                 
                 ],
               ),
             ),

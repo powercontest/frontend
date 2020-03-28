@@ -5,6 +5,15 @@ class Community {
   String commName;
 
   Community({this.commName, this.members});
+
+  User getUser(int id) {
+    for (User item in this.members) {
+      if (item.meter.id == id) {
+        return item;
+      }
+    }
+  }
+  
 }
 
 //below is the static data to be used in modeling the UI
