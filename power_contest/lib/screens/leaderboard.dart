@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:power_contest/functions/functions.dart';
 import 'package:power_contest/models/community.dart';
+import 'package:power_contest/models/jsonMeter.dart';
 import 'package:power_contest/models/meter.dart';
 import 'package:power_contest/screens/detailPage.dart';
+import 'package:power_contest/screens/welcomepage.dart';
 
 class Leaderboard extends StatefulWidget {
   final String username;
@@ -16,12 +18,13 @@ class Leaderboard extends StatefulWidget {
 
 class _LeaderboardState extends State<Leaderboard> {
   bool _loading = true;
-  
+  List<JsonMeter> harrington;
   @override
   void initState() {
     super.initState();
     getRequest().then((value) {
       print(value);
+      harrington = value;
       setState(() {
         _loading = false;
       }); 
@@ -71,8 +74,9 @@ class _LeaderboardState extends State<Leaderboard> {
       padding: EdgeInsets.only(top: 18.0),
       child: Row(children: <Widget>[
                 IconButton(
-                  icon: Icon(Icons.menu, size: 40, color: Colors.white,),
-                  onPressed: () {},)
+                  icon: Icon(FontAwesomeIcons.signOutAlt, size: 35, color: Colors.white,),
+                  onPressed: () => Navigator.push(
+            context, MaterialPageRoute(builder: (context) => WelcomePage())),)
         ],),
     );
   }
@@ -152,7 +156,7 @@ String kwhToCoal(double kwh) {
   return lbsCoal.floor().toString();
 }
 
-Widget _readingTile(BuildContext context, int index, Meter meter) {
+Widget _readingTile(BuildContext context, int index, JsonMeter meter) {
   index++;
   
   String city;
@@ -228,7 +232,6 @@ Widget _readingTile(BuildContext context, int index, Meter meter) {
 }
 
 Widget _listMeters() {
-  List<Meter> harrington = meters;
   if (_loading) {
     return loadingCircle();
   } else {
@@ -236,7 +239,7 @@ Widget _listMeters() {
         child: ListView.builder(
           itemCount: harrington.length,
           itemBuilder: (BuildContext context, int index) {
-            Meter meter = meters[index];
+            JsonMeter meter = harrington[index];
             return _readingTile(context, index, meter);
           }));
   }

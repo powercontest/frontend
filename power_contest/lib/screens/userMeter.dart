@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:power_contest/screens/leaderboard.dart';
 
 class UserMeter extends StatefulWidget {
@@ -86,7 +87,7 @@ void dispose() {
               keyboardType: isCode == true ? TextInputType.number:TextInputType.text,
               maxLines: 1,
               validator: (value) => value.isEmpty ? "Field can't be empty" : null,
-                  onChanged: (value) => isCode == true ? meterID = int.parse(value) : name=value,
+                  onChanged: (value) => isCode == true ? meterID = int.parse(value) : name = value,
 
             )
           
@@ -95,11 +96,37 @@ void dispose() {
     );
   }
 
+  void _showDialog() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Error"),
+          content: ListTile(leading: Icon(FontAwesomeIcons.cross, color: Color.fromRGBO(0, 126, 222, 1), size: 45,), title: Text("Please enter a valid User Name."),),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Try Again"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget _submitButton() {
     return InkWell(
       onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Leaderboard(username: name, meterId: meterID,)));
+        if (name != "") {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Leaderboard(username: name, meterId: meterID,)));
+        } else {
+          _showDialog();
+        }
       },
           child: Container(
         width: MediaQuery.of(context).size.width/3,
@@ -173,9 +200,20 @@ void dispose() {
                       _title()
                     ]),
                     SizedBox(height: 25,),
-                    Text(
-                      "Provide a temporary User Name and Meter ID.",
-                      style: TextStyle(color: Colors.white),),
+                    RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                    text: "Provide a temporary User Name",
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                    children: [
+                      widget.signedIn == true ? TextSpan(
+                        text: " and Meter ID",
+                        style: TextStyle(color: Colors.white,),
+                      ) : TextSpan()
+                    ]),
+              ),
                     SizedBox(height: 15),
                   ],
                 ),

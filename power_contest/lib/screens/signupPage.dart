@@ -101,7 +101,7 @@ class _SignupPageState extends State<SignupPage> {
       textAlign: TextAlign.center,
       text: TextSpan(
           text: 'Power',
-          style: GoogleFonts.portLligatSans(
+          style: TextStyle(
             fontSize: 35,
             fontWeight: FontWeight.w800,
             color: Colors.white,
