@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:power_contest/screens/userMeter.dart';
 import 'signupPage.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:power_contest/screens/signupPage.dart';
 
 
@@ -15,6 +14,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  String tempEmail = "test@abc.com";
+  String tempPassword = "12345";
   String email, password;
   //text controller
   final TextEditingController emailController = new TextEditingController();
@@ -74,6 +75,11 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  void dispose() {
+      emailController.dispose();
+      passController.dispose();
+      super.dispose();
+  }
 
   Widget _entryField(String title, {bool isPassword = false}) {
     return Container(
@@ -81,38 +87,59 @@ class _LoginPageState extends State<LoginPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            title,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-          ),
+          
           SizedBox(
             height: 10,
           ),
-          TextField(
-            controller: isPassword == true ? passController:emailController,
-            onChanged: (dynamic string) {
-              if(isPassword) {
-                password = string;
-              } else {
-                email = string;
-              }
-            },
-              obscureText: isPassword,
+          TextFormField(
               decoration: InputDecoration(
+                  labelText: title,
                   border: InputBorder.none,
                   fillColor: Color.fromRGBO(0, 126, 222, 0.1),
-                  filled: true))
+                  filled: true),
+              keyboardType: isPassword == true ? TextInputType.visiblePassword:TextInputType.emailAddress,
+              maxLines: 1,
+              validator: (value) => value.isEmpty ? "Field can't be empty" : null,
+                  onChanged: (value) => isPassword == true ? password = value : email=value,
+
+            )
         ],
       ),
+    );
+  }
+
+  void _showDialog() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Error"),
+          content: ListTile(leading: Icon(Icons.cancel, color: Color.fromRGBO(0, 126, 222, 1), size: 45,), title: Text("Invalid username or password."),),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Try Again"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
   Widget _submitButton() {
     return InkWell(
       onTap: () {
-        print(email);
-        Navigator.push(
+        print(password);
+        if (email == tempEmail && password == tempPassword) {
+          Navigator.push(
             context, MaterialPageRoute(builder: (context) => UserMeter(email: email,)));
+        } else {
+          _showDialog();
+        }
       },
           child: Container(
         width: MediaQuery.of(context).size.width/2,
@@ -144,7 +171,7 @@ class _LoginPageState extends State<LoginPage> {
       textAlign: TextAlign.center,
       text: TextSpan(
           text: 'Power',
-          style: GoogleFonts.portLligatSans(
+          style: TextStyle(
             fontSize: 35,
             fontWeight: FontWeight.w800,
             color: Colors.white,
@@ -220,7 +247,7 @@ class _LoginPageState extends State<LoginPage> {
                       children: <Widget>[
                         _top(),
                         SizedBox(
-                          height: 50,
+                          height: 40,
                         ),
                         _emailPasswordWidget(),
                         SizedBox(

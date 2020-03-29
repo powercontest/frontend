@@ -3,8 +3,9 @@ import 'package:power_contest/models/user.dart';
 class Community {
   List<User> members;
   String commName;
+  int antID;
 
-  Community({this.commName, this.members});
+  Community({this.commName, this.members, this.antID});
 
   User getUser(int id) {
     for (User item in this.members) {
@@ -18,4 +19,4 @@ class Community {
 
 //below is the static data to be used in modeling the UI
 
-Community sampleComm = Community(commName: "Memory Lane", members: commMembers);
+Community sampleComm = Community(commName: "Harrington", members: commMembers, antID: 51276197);

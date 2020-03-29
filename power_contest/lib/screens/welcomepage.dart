@@ -100,9 +100,9 @@ class _WelcomePageState extends State<WelcomePage> {
       textAlign: TextAlign.center,
       text: TextSpan(
           text: 'Power',
-          style: GoogleFonts.portLligatSans(
+          style: TextStyle(
             fontSize: 35,
-            fontWeight: FontWeight.w800,
+            fontWeight: FontWeight.w700,
             color: Colors.white,
           ),
           children: [

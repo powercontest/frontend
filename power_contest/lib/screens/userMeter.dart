@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-
-import 'package:google_fonts/google_fonts.dart';
 import 'package:power_contest/screens/leaderboard.dart';
 
 class UserMeter extends StatefulWidget {
   final String email;
-  UserMeter({Key key, this.email}) : super(key: key);
+  final bool signedIn;
+  UserMeter({Key key, this.email, this.signedIn}) : super(key: key);
 
   @override
   _UserMeterState createState() => _UserMeterState();
@@ -16,7 +15,8 @@ class _UserMeterState extends State<UserMeter> {
   int meterID;
 
   //text controller
-  final TextEditingController controller = new TextEditingController();
+  final TextEditingController userController = new TextEditingController();
+  final TextEditingController codeController = new TextEditingController();
 
 Widget _email() {
   if(widget.email != null && widget.email.length != 0) {
@@ -62,32 +62,34 @@ Widget _email() {
     );
   }
 
+void dispose() {
+      userController.dispose();
+      codeController.dispose();
+      super.dispose();
+  }
+
   Widget _entryField(String title, {bool isCode = false}) {
     return Container(
       margin: isCode == true ? EdgeInsets.symmetric(vertical: 10, horizontal: 90): EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       child: Column(
         crossAxisAlignment: isCode == true ? CrossAxisAlignment.center: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            title,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-          ),
           SizedBox(
             height: 10,
           ),
-          TextField(
-            controller: controller,
-            onChanged: (dynamic string) {
-              if(isCode) {
-                meterID = string;
-              } else {
-                name = string;
-              }
-            },
+          TextFormField(
               decoration: InputDecoration(
+                  labelText: title,
                   border: InputBorder.none,
                   fillColor: Color.fromRGBO(0, 126, 222, 0.1),
-                  filled: true))
+                  filled: true),
+              keyboardType: isCode == true ? TextInputType.number:TextInputType.text,
+              maxLines: 1,
+              validator: (value) => value.isEmpty ? "Field can't be empty" : null,
+                  onChanged: (value) => isCode == true ? meterID = int.parse(value) : name=value,
+
+            )
+          
         ],
       ),
     );
@@ -97,7 +99,7 @@ Widget _email() {
     return InkWell(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Leaderboard()));
+            context, MaterialPageRoute(builder: (context) => Leaderboard(username: name, meterId: meterID,)));
       },
           child: Container(
         width: MediaQuery.of(context).size.width/3,
@@ -127,7 +129,7 @@ Widget _email() {
       textAlign: TextAlign.center,
       text: TextSpan(
           text: 'Power',
-          style: GoogleFonts.portLligatSans(
+          style: TextStyle(
             fontSize: 35,
             fontWeight: FontWeight.w800,
             color: Colors.white,
@@ -145,7 +147,7 @@ Widget _email() {
     return Column(
       children: <Widget>[
         _entryField("Username"),
-        _entryField("Meter ID", isCode: true),
+        widget.signedIn == true ? _entryField("Meter ID", isCode: true): SizedBox()
       ],
     );
   }

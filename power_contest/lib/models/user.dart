@@ -12,5 +12,5 @@ List<User> commMembers = [
   User(username: "Yoseph", meter: meters[0]),
   User(username: "Dhruv", meter: meters[1]),
   User(username: "Luis", meter: meters[2]),
-  User(username: "Rachel", meter: meters[3]),
+  User(username: "Carolina", meter: meters[3]),
 ];

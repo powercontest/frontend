@@ -15,6 +15,8 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
+  String email, password;
+
   Widget _backButton() {
     return InkWell(
       onTap: () {
@@ -42,19 +44,22 @@ class _SignupPageState extends State<SignupPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            title,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-          ),
+          
           SizedBox(
             height: 10,
           ),
-          TextField(
-              obscureText: isPassword,
+          TextFormField(
               decoration: InputDecoration(
+                  labelText: title,
                   border: InputBorder.none,
                   fillColor: Color.fromRGBO(0, 126, 222, 0.1),
-                  filled: true))
+                  filled: true),
+              keyboardType: isPassword == true ? TextInputType.visiblePassword:TextInputType.emailAddress,
+              maxLines: 1,
+              validator: (value) => value.isEmpty ? "Field can't be empty" : null,
+                  onChanged: (value) => isPassword == true ? password = value : email=value,
+
+            )
         ],
       ),
     );
@@ -64,7 +69,7 @@ class _SignupPageState extends State<SignupPage> {
     return InkWell(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => UserMeter()));
+            context, MaterialPageRoute(builder: (context) => UserMeter(email: email, signedIn: true,)));
       },
           child: Container(
         width: MediaQuery.of(context).size.width/2,
@@ -84,7 +89,7 @@ class _SignupPageState extends State<SignupPage> {
                 end: Alignment.centerRight,
                 colors: [Color.fromRGBO(0, 187, 255, 1), Color.fromRGBO(0, 126, 222, 1)])),
         child: Text(
-          'Login',
+          'Register',
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
       ),
