@@ -16,9 +16,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  String tempEmail = "test@abc.com";
+  String tempEmail = "test";
   String tempPassword = "12345";
-  String email, password;
+  String username, password;
   bool loggingIn = false;
   //text controller
   final TextEditingController emailController = new TextEditingController();
@@ -100,10 +100,10 @@ class _LoginPageState extends State<LoginPage> {
                   border: InputBorder.none,
                   fillColor: Color.fromRGBO(0, 126, 222, 0.1),
                   filled: true),
-              keyboardType: isPassword == true ? TextInputType.visiblePassword:TextInputType.emailAddress,
+              keyboardType: isPassword == true ? TextInputType.visiblePassword:TextInputType.text,
               maxLines: 1,
               validator: (value) => value.isEmpty ? "Field can't be empty" : null,
-                  onChanged: (value) => isPassword == true ? password = value : email=value,
+                  onChanged: (value) => isPassword == true ? password = value : username=value,
 
             )
         ],
@@ -145,10 +145,10 @@ class _LoginPageState extends State<LoginPage> {
     Map<String, dynamic> returned;
     return GestureDetector(
       onTap: () {
-        signIn(email, password).then((value) {
+        signIn(username, password).then((value) {
           returned = value;
           
-        if (((email == tempEmail) && (password == tempPassword)) || (value['boolean'])) {
+        if (((username == tempEmail) && (password == tempPassword)) || (value['boolean'])) {
           Navigator.push(
             context, MaterialPageRoute(builder: (context) => Leaderboard(username: returned['username'], meterId: returned['meterID'],)));
         } else {
@@ -203,7 +203,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _emailPasswordWidget() {
     return loggingIn == true ? signingIn : Column(
       children: <Widget>[
-        _entryField("Email Address"),
+        _entryField("User Name"),
         _entryField("Password", isPassword: true),
       ],
     );

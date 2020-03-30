@@ -28,7 +28,7 @@ Future<List<dynamic>> getRequest() async{
 
 Future<Map<String, dynamic>> signIn(String username, String password) async {
 
-  var url = "http://35.245.130.207/getmeter?user=$username&password=$password";
+  var url = "http://35.245.130.207/getmeter?user=${username.toLowerCase()}&password=$password";
   print(url);
   
   
@@ -54,7 +54,7 @@ Future<Map<String, dynamic>> signIn(String username, String password) async {
 }
 
 Future<bool> signUp(String email, String password, String username, int meter) async {
-  var url = "http://35.245.130.207/register?user=$username&password=$password&email=$email&meterid=$meter";
+  var url = "http://35.245.130.207/register?user=${username.toLowerCase()}&password=$password&email=$email&meterid=$meter";
   print(url);
 
   http.Response response = await http.get(Uri.encodeFull(url));
