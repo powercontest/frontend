@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:power_contest/functions/functions.dart';
+import 'package:power_contest/screens/leaderboard.dart';
 import 'package:power_contest/screens/userMeter.dart';
 import 'signupPage.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,6 +19,8 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   String email, password;
+  String username;
+  int meterID;
 
   Widget _backButton() {
     return InkWell(
@@ -38,7 +43,7 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
-  Widget _entryField(String title, {bool isPassword = false}) {
+  Widget _emailPass(String title, {bool isPassword = false}) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       child: Column(
@@ -65,11 +70,66 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
+  Widget _userMeterField(String title, {bool isCode = false}) {
+    return Container(
+      margin: isCode == true ? EdgeInsets.symmetric(vertical: 10, horizontal: 90): EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      child: Column(
+        crossAxisAlignment: isCode == true ? CrossAxisAlignment.center: CrossAxisAlignment.start,
+        children: <Widget>[
+          SizedBox(
+            height: 10,
+          ),
+          TextFormField(
+              decoration: InputDecoration(
+                  labelText: title,
+                  border: InputBorder.none,
+                  fillColor: Color.fromRGBO(0, 126, 222, 0.1),
+                  filled: true),
+              keyboardType: isCode == true ? TextInputType.number:TextInputType.text,
+              maxLines: 1,
+              validator: (value) => value.isEmpty ? "Field can't be empty" : null,
+                  onChanged: (value) => isCode == true ? meterID = int.parse(value) : username = value,
+            )
+          
+        ],
+      ),
+    );
+  }
+
+  void _showDialog() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: ListTile(leading: Icon(FontAwesomeIcons.exclamationTriangle, color: Color.fromRGBO(0, 126, 222, 1), size: 45,), title: Text("This username is already in use."),),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Try Again"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget _submitButton() {
     return InkWell(
       onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => UserMeter(email: email, signedIn: true,)));
+        signUp(email, password, username, meterID).then((value) {
+          print(value);
+          if(value) {
+            Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Leaderboard(username: username, meterId: meterID,)));
+          } else {
+            _showDialog();
+          }
+        });
+        
       },
           child: Container(
         width: MediaQuery.of(context).size.width/2,
@@ -118,8 +178,8 @@ class _SignupPageState extends State<SignupPage> {
   Widget _emailPasswordWidget() {
     return Column(
       children: <Widget>[
-        _entryField("Email Address"),
-        _entryField("Password", isPassword: true),
+        _emailPass("Email Address"),
+        _emailPass("Password", isPassword: true),
       ],
     );
   }
@@ -178,14 +238,15 @@ class _SignupPageState extends State<SignupPage> {
                     child: Column(
                       children: <Widget>[
                         _top(),
-                        SizedBox(
-                          height: 50,
-                        ),
+                        Expanded
+                        (child: ListView(children: <Widget>[
                         _emailPasswordWidget(),
+                        _userMeterField("User Name"),
+                        _userMeterField("Meter ID", isCode: true),
                         SizedBox(
                           height: 20,
                         ),
-                        _submitButton(),
+                        _submitButton(),],))
                         
                        
                       ],

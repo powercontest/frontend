@@ -26,9 +26,9 @@ Future<List<dynamic>> getRequest() async{
 
 
 
-Future<Map<String, dynamic>> signIn(String email, String password) async {
+Future<Map<String, dynamic>> signIn(String username, String password) async {
 
-  var url = "http://35.245.130.207/getmeter?user=$email&password=$password";
+  var url = "http://35.245.130.207/getmeter?user=$username&password=$password";
   print(url);
   
   
@@ -53,4 +53,21 @@ Future<Map<String, dynamic>> signIn(String email, String password) async {
 
 }
 
+Future<bool> signUp(String email, String password, String username, int meter) async {
+  var url = "http://35.245.130.207/register?user=$username&password=$password&email=$email&meterid=$meter";
+  print(url);
+
+  http.Response response = await http.get(Uri.encodeFull(url));
+
+  print(response.body);
+
+  if (response.statusCode == 200) {
+    if (response.body == "username taken") {
+      return false;
+    } else {
+      return true;
+    }
+
+}
+}
 
