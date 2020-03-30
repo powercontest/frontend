@@ -24,14 +24,32 @@ Future<List<dynamic>> getRequest() async{
 
 }
 
-void updateList(List<dynamic> json) {
-  List<Meter> returnList;
-  for (var jsonMeter in json) {
-    print(jsonMeter);
-    returnList.add(new Meter(id: jsonMeter["meterID"]));
-  }
 
-  //print(returnList);
+
+Future<Map<String, dynamic>> signIn(String email, String password) async {
+
+  var url = "http://35.245.130.207/getmeter?user=$email&password=$password";
+  print(url);
+  
+  
+  http.Response response = await http.get(Uri.encodeFull(url));
+
+
+  print(response.body);
+  if (response.statusCode == 200) {
+    Map<String, dynamic> jason = convert.jsonDecode(response.body);
+    Map<String, dynamic> toReturn = {};
+    print(jason);
+    if (jason["error"] == "user not found") {
+      toReturn['boolean'] = false;
+    } else {
+      toReturn['boolean'] = true;
+      toReturn['username'] = jason['username'];
+      toReturn['meterID'] = jason['meter'];
+    }
+
+    return toReturn;
+  }
 
 }
 

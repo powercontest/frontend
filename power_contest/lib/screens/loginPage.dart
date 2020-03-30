@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:power_contest/functions/functions.dart';
+import 'package:power_contest/screens/leaderboard.dart';
 import 'package:power_contest/screens/userMeter.dart';
 import 'signupPage.dart';
 import 'package:power_contest/screens/signupPage.dart';
@@ -17,6 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   String tempEmail = "test@abc.com";
   String tempPassword = "12345";
   String email, password;
+  bool loggingIn = false;
   //text controller
   final TextEditingController emailController = new TextEditingController();
   final TextEditingController passController = new TextEditingController();
@@ -108,13 +111,20 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  Widget signingIn() {
+    return Center(
+      child: ListTile(
+        leading: CircularProgressIndicator(strokeWidth: 3, ), 
+        title: Text("Signing in..."),),
+    );
+  }
+
   void _showDialog() {
     // flutter defined function
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Error"),
           content: ListTile(leading: Icon(Icons.cancel, color: Color.fromRGBO(0, 126, 222, 1), size: 45,), title: Text("Invalid username or password."),),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
@@ -131,17 +141,22 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _submitButton() {
-    return InkWell(
+    
+    Map<String, dynamic> returned;
+    return GestureDetector(
       onTap: () {
-        print(password);
-        if (email == tempEmail && password == tempPassword) {
+        signIn(email, password).then((value) {
+          returned = value;
+          
+        if (((email == tempEmail) && (password == tempPassword)) || (value['boolean'])) {
           Navigator.push(
-            context, MaterialPageRoute(builder: (context) => UserMeter(email: email,)));
+            context, MaterialPageRoute(builder: (context) => Leaderboard(username: returned['username'], meterId: returned['meterID'],)));
         } else {
           _showDialog();
-        }
+        }          
+        });
       },
-          child: Container(
+      child: Container(
         width: MediaQuery.of(context).size.width/2,
         padding: EdgeInsets.symmetric(vertical: 15),
         alignment: Alignment.center,
@@ -186,7 +201,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _emailPasswordWidget() {
-    return Column(
+    return loggingIn == true ? signingIn : Column(
       children: <Widget>[
         _entryField("Email Address"),
         _entryField("Password", isPassword: true),
