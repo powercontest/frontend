@@ -277,7 +277,7 @@ class _DetailPageState extends State<DetailPage> {
             child: Column(
               children: <Widget>[
                 Text("#${random.nextInt(100)}", style: TextStyle(fontSize: 40, fontWeight: FontWeight.w500, color: Colors.blue),),
-                Text("City Rank")
+                Text("Country Rank")
               ],
             ),
           ),
