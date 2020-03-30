@@ -210,7 +210,7 @@ class _DetailPageState extends State<DetailPage> {
                     ),
                     children: [
                       TextSpan(
-                        text: widget.meter.owner,
+                        text: widget.meter.owner.toUpperCase(),
                         style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.normal),
                       ),
                     ]),

@@ -208,7 +208,6 @@ class _SignupPageState extends State<SignupPage> {
                           Text(
                             "Sign Up",
                             style: TextStyle(
-                              letterSpacing: 2,
                               color: Colors.white,
                               fontSize: 40,
                               fontWeight: FontWeight.w700),
@@ -252,7 +251,7 @@ class _SignupPageState extends State<SignupPage> {
                       ],
                     ),
                   ),
-                  Positioned(top: 40, left: 0, child: _backButton()),
+                  Positioned(top: 30, left: 0, child: _backButton()),
                  
                 ],
               ),

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:power_contest/functions/functions.dart';
-import 'package:power_contest/models/community.dart';
 import 'package:power_contest/models/jsonMeter.dart';
-import 'package:power_contest/models/meter.dart';
 import 'package:power_contest/screens/detailPage.dart';
 import 'package:power_contest/screens/welcomepage.dart';
 
@@ -52,7 +50,7 @@ class _LeaderboardState extends State<Leaderboard> {
         RichText(
           textAlign: TextAlign.center,
           text: TextSpan(
-              text: 'Welcome, ',
+              text: 'WELCOME, ',
               style: TextStyle(
                 fontSize: 25,
                 fontWeight: FontWeight.w800,
@@ -60,7 +58,7 @@ class _LeaderboardState extends State<Leaderboard> {
               ),
               children: [
                 TextSpan(
-                  text: widget.username + ".",
+                  text: widget.username.toUpperCase() + ".",
                   style: TextStyle(color: Colors.black, fontSize: 25),
                 ),
               ]),
@@ -106,7 +104,6 @@ class _LeaderboardState extends State<Leaderboard> {
                             "CURRENT",
                             overflow: TextOverflow.visible,
                             style: TextStyle(
-                              letterSpacing: 2,
                               color: Colors.white,
                               fontSize: 30,
                               fontWeight: FontWeight.w800),
@@ -115,7 +112,6 @@ class _LeaderboardState extends State<Leaderboard> {
                             "RANKINGS",
                             overflow: TextOverflow.visible,
                             style: TextStyle(
-                              letterSpacing: 2,
                               color: Colors.white,
                               fontSize: 30,
                               fontWeight: FontWeight.w800),
