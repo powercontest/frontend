@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:power_contest/functions/functions.dart';
+import 'package:power_contest/screens/leaderboard.dart';
 import 'package:power_contest/screens/userMeter.dart';
 import 'signupPage.dart';
 import 'package:power_contest/screens/signupPage.dart';
@@ -140,32 +141,22 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _submitButton() {
-    int success;
+    
+    Map<String, dynamic> returned;
     return GestureDetector(
       onTap: () {
-        setState(() {
-          loggingIn = true;
-        });
-        
         signIn(email, password).then((value) {
-          success = value;
-          loggingIn = false;
-        });
-        
-        setState(() {
-          var abebe = new Future.delayed(const Duration(seconds: 5), () {
-        return null;
-      });
-        });
-        print(success);
-        if (((email == tempEmail) && (password == tempPassword)) || (200 == success)) {
+          returned = value;
+          
+        if (((email == tempEmail) && (password == tempPassword)) || (value['boolean'])) {
           Navigator.push(
-            context, MaterialPageRoute(builder: (context) => UserMeter(email: email,)));
+            context, MaterialPageRoute(builder: (context) => Leaderboard(username: returned['username'], meterId: returned['meterID'],)));
         } else {
           _showDialog();
-        }
+        }          
+        });
       },
-          child: Container(
+      child: Container(
         width: MediaQuery.of(context).size.width/2,
         padding: EdgeInsets.symmetric(vertical: 15),
         alignment: Alignment.center,

@@ -167,9 +167,9 @@ Widget _readingTile(BuildContext context, int index, JsonMeter meter) {
   return Container(
     decoration: 
         BoxDecoration(
-          color: Colors.white,
+          color: widget.meterId.toString() == meter.id ? Color.fromRGBO(250, 250, 250, 0.9): Colors.white,
                 borderRadius: BorderRadius.circular(10),
-                boxShadow: [BoxShadow(color: Colors.black26, offset: Offset(0, 2), blurRadius: 6)]
+                boxShadow: [BoxShadow(color: widget.meterId.toString() == meter.id ? Colors.blue : Colors.black26, offset: Offset(0, 2), blurRadius: 6)]
               ),
     margin: EdgeInsets.all(15),
     padding: EdgeInsets.all(10),
